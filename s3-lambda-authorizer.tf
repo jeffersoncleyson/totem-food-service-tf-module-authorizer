@@ -33,7 +33,7 @@ data "archive_file" "lambda_authorizer_demo_file" {
   source_dir  = "${path.module}/lambda"
   output_path = "${path.module}/lambda.zip"
 
-  depends_on = [ null_resource.lambda_dependencies ]
+  # depends_on = [ null_resource.lambda_dependencies ]
 }
 
 resource "aws_s3_object" "lambda_authorizer_demo" {
@@ -51,15 +51,15 @@ resource "aws_s3_object" "lambda_authorizer_demo" {
   }
 }
 
-resource "null_resource" "lambda_dependencies" {
-  provisioner "local-exec" {
-    command = "cd ${path.module}/lambda && npm install"
-  }
+# resource "null_resource" "lambda_dependencies" {
+#   provisioner "local-exec" {
+#     command = "cd ${path.module}/lambda && npm install"
+#   }
 
-  triggers = {
-    index = sha256(file("${path.module}/lambda/lambda_authorizer.js"))
-    package = sha256(file("${path.module}/lambda/package.json"))
-    lock = sha256(file("${path.module}/lambda/package-lock.json"))
-    node = sha256(join("",fileset(path.module, "lambda/**/*.js")))
-  }
-}
+#   triggers = {
+#     index = sha256(file("${path.module}/lambda/lambda_authorizer.js"))
+#     package = sha256(file("${path.module}/lambda/package.json"))
+#     lock = sha256(file("${path.module}/lambda/package-lock.json"))
+#     node = sha256(join("",fileset(path.module, "lambda/**/*.js")))
+#   }
+# }
